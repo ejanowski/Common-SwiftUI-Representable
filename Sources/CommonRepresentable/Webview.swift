@@ -10,9 +10,11 @@ import UIKit
 import WebKit
 
 public struct WebView: UIViewRepresentable {
-    let url: URL
+    let url: URL?
+    let contentFile: String?
     
-    public init(url: URL) {
+    public init(url: URL? = nil, contentFile: String? = nil) {
+        self.contentFile = contentFile
         self.url = url
     }
 
@@ -22,7 +24,11 @@ public struct WebView: UIViewRepresentable {
     }
     
     public func updateUIView(_ webView: WKWebView, context: Context) {
-        let request = URLRequest(url: url)
-        webView.load(request)
+        if let url {
+            let request = URLRequest(url: url)
+            webView.load(request)
+        } else if let contentFile {
+            webView.loadHTMLString(contentFile, baseURL: nil)
+        }
     }
 }
